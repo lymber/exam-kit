@@ -2,7 +2,7 @@
 
 ## Description
 
-This collection of software, written in C, is intended to span
+This collection of software, written in Perl, is intended to span
 "different" exams from a sample file, tyipically typed using the LaTeX
 system and a document class published here.
 
