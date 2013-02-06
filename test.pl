@@ -92,16 +92,23 @@ open(INPUT,"<", $input) or die "Can't open $input for reading: $!";
 
 # print $questoes[2];
 
-my $start  = qr/^\*\*\* %ST_QUEST/;
-my $finish = qr/^\*\*\* %END_QUEST/;
-
-
+# my $start  = qr/^\*\*\* %ST_QUEST/;
+# my $finish = qr/^\*\*\* %END_QUEST/;
 # while(<INPUT>) {
 #     if ( /$start/ .. /$finish/ ) {
 #         next  if /$start/ or /$finish/;
 #         print $_;
 #     }
 # }
+
+while ( $_ = <INPUT> ) {
+    if ($_ =~ /\\begin\{questao\}/) {
+	print "Achei questão começando na linha $.\n"
+    }
+    if ($_ =~ /\\end\{questao\}/) {
+	print "Achei término de questão na linha $.\n"
+    }
+}
 
 # my @questoes = ();
 # my $i = 0;
