@@ -3,134 +3,96 @@
 use strict;
 use warnings;
 
-# Lero lero
-# print "What is your name? ";
-# my $name = <STDIN>;
-# chomp $name; #Tira o fim de linha.
-# print "Hello $name, how are you?\n\n";
-# print "Type an array of numbers: ";
-
-# Lê e imprime
-# my @nums = split(' ',<STDIN>);
-# print "Original: @nums\n";
-
-# # Ordena
-# my @sorted = sort @nums;
-# print "Sorted: @sorted\n";
-
-# # Soma
-# my $sum=0;
-# foreach(@nums){
-#     $sum += $_;
-# }
-# print "The sum of them is $sum.\n";
-
-# Lê e imprime
-my $input = './entrada.txt';
-my $output = './saida.txt';
-
 my $magic_number = $ARGV[0];
+my $input = "./$ARGV[1]";
 
-open(INPUT,"<", $input) or die "Can't open $input for reading: $!";
+open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
 
-# open(OUTPUT,">",$output) or die "Can't open $output for writing: $!";
-
-# select OUTPUT;
-
-while( $_=<INPUT> ) {
-    my @nums = split(' ',$_); 
-    print "Original line: $.\n";
-    print "Original data: @nums\n";
-
-# Ordena
-    my @sorted = sort @nums;
-    print "Sorted: @sorted\n";
-
-# Soma
-    my $sum=0;
-    foreach(@nums){
-	$sum += $_;
-    }
-    print "The sum of them is $sum.\n";
-
-# Embaralha
-
-    my @temp = @nums;
-    my @num_shuf = ();
-    my $i = 0;
-    while ($i < $magic_number){
-	while (@temp) {
-	    push(@num_shuf, splice(@temp, rand @temp, 1));
-	}
-	print "Shuffled: @num_shuf\n";
-	@temp = @nums;
-	@num_shuf = ();
-	$i++; 
-    }
-    print "\n";
-}
-
-close(INPUT);
-
-$input = './entrada.tex';
-open(INPUT,"<", $input) or die "Can't open $input for reading: $!";
-
-# my @tudo = <INPUT>;
-
-# print "@tudo\n";
-
-# my @teste=split('\begin{questao}',@tudo);
-
-# my @questoes= split("\begin{questao}",@tudo);
-
-# my $tudo;
-# while (<INPUT>){
-#     $tudo .= $_;
-# }
-
-# my @questoes = split(/\\begin\{questao\}/,$tudo);
-
-# print $questoes[2];
-
-# my $start  = qr/^\*\*\* %ST_QUEST/;
-# my $finish = qr/^\*\*\* %END_QUEST/;
-# while(<INPUT>) {
-#     if ( /$start/ .. /$finish/ ) {
-#         next  if /$start/ or /$finish/;
-#         print $_;
-#     }
-# }
+my $num_quest = 0;
 
 while ( $_ = <INPUT> ) {
     if ($_ =~ /\\begin\{questao\}/) {
-	print "Achei questão começando na linha $.\n"
-    }
-    if ($_ =~ /\\end\{questao\}/) {
-	print "Achei término de questão na linha $.\n"
+	print  "Achei questão começando na linha $.\n";
+	$num_quest++;
     }
 }
 
-# my @questoes = ();
-# my $i = 0;
-
-# FEIO: while( $_ = <INPUT> ) {
-#     if ($_ !~ /\\begin\{questao\}/)
-#     print "Linha $.: $_";
-#     if ($_ =~ /\\begin\{questao\}/) {
-# 	print "Achei questão!\n";
-# 	next FEIO;
-#     }
-#     elsif ($_ !~ /\\end\{questao\}/){
-# 	$questoes[$i] .= $_;
-# 	print "\\end{questao}\n\n";
-# 	$i++;
-#     }
-#     else {print "Aqui não tinha uma questão.\n";}
-# }
-
-# print "@questoes";
+print "A prova original contém $num_quest questões.\n";
 
 close(INPUT);
-# close(OUTPUT);
+
+my $header = get_hdr();
+
+my $footer = '';
+
+# '\vspace{1cm}
+
+# \begin{center}
+#   \sc{Boa Prova!}
+# \end{center}
+
+# \end{document}
+# ';
+
+my $i = 0; # test permutation index
+
+# Fazer aqui funções do tipo pega_questoes e gera_provas
+
+while ( $i < $magic_number ) {
+    open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
+    my $output = "./prova-$i.tex";
+    open(OUTPUT,">",$output) or die "Can't open $output for writing: $!\n";
+    print "Gerando prova $i... ";
+    select OUTPUT;
+
+    my $noBloco = 0;
+    my @questoes = ();
+    my $j=0; # question number
+    while (<INPUT>) {
+	if (/\\begin\{questao\}/) {
+	    $noBloco = 1;
+	    if (/\\end\{questao\}/) {
+		$noBloco = 0;
+		print "\n";
+	    }
+	}
+	if ($noBloco) {
+	    $questoes[$j] .= $_;
+	    if (/\\end\{questao\}/) {
+		$noBloco = 0;
+		$questoes[$j] .= "\n";
+		$j++;
+	    }
+	}
+	# pega o que vier depois da última questão e vira rodapé
+	if ($j==$num_quest){$_ =~ s/\\end\{questao\}//; $footer .= $_;}
+    }
+    print $header;
+    my @temp = @questoes;
+    my @quest_shuf = ();
+    
+    while (@temp) {
+	push(@quest_shuf, splice(@temp, rand @temp, 1));
+    }
+    print @quest_shuf;
+    print $footer;
+
+    close(OUTPUT);
+    close(INPUT);
+    
+    select STDOUT;
+    print "Pronto! \[$j questões\]\n";
+    $i++;
+}
+
+sub get_hdr {
+    my $hdr='';
+    open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
+    while ( ( $_ = <INPUT> ) && ( $_ !~ /\\begin\{questao\}/ ) ) {
+	$hdr .= $_;
+    }
+    close(INPUT);
+    return $hdr;
+}
 
 exit 0;
