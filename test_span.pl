@@ -141,8 +141,9 @@ sub grab_shuf_alt {
 	$st_statement .= $linesaux[$i]."\n";
 
 	while ( $i <= $#linesaux )  {
+	    # need to fix match below to grab all lines of alternatives
 	    if ($linesaux[$i] =~ /.*\\item.*/ ) {push(@alternatives, splice(@linesaux, $i, 1));}
-	    else {$i++}
+	    else {$i++;}
 	}
 
 	$temp = $st_statement . join("\n",list_shuf(@alternatives)) . "\n  \\end\{enumerate\}\n\\end{questao\}\n\n";
