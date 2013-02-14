@@ -133,20 +133,19 @@ sub grab_shuf_alt {
 
 	my $i = 0;
 	my $st_statement = '';
-	while ( ($i <= $#linesaux) && ($linesaux[$i] !~ /\\begin\{enumerate\}/) ) {
-	    $st_statement .= $linesaux[$i];
+	while ( ($i <= $#linesaux) && ($linesaux[$i] !~ /\\begin\{enumerate\}\[\\bf a\.\]/) ) {
+	    $st_statement .= $linesaux[$i]."\n";
 	    $i++;
 	}
 	
-	$st_statement .= $linesaux[$i];
+	$st_statement .= $linesaux[$i]."\n";
 
-	$i = 0;
 	while ( $i <= $#linesaux )  {
 	    if ($linesaux[$i] =~ /.*\\item.*/ ) {push(@alternatives, splice(@linesaux, $i, 1));}
 	    else {$i++}
 	}
 
-	$temp = $st_statement . join("\n",list_shuf(@alternatives)) . "\\end\{enumerate\}\n\\end{questao\}\n";
+	$temp = $st_statement . join("\n",list_shuf(@alternatives)) . "\n  \\end\{enumerate\}\n\\end{questao\}\n\n";
 	push(@out, $temp);
     } 
     return @out;
