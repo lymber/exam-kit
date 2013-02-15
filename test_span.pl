@@ -87,35 +87,35 @@ sub get_quest_footer {
     while (<INPUT>) {
 	if (/\\begin\{questao\}/) {
 	    $noBloco = 1;
-	    if (/\\end\{questao\}/) {
+	    if (/\\clearpage/) {
 		$noBloco = 0;
 		print "\n";
 	    }
 	}
 	if ($noBloco) {
 	    $questoes[$j] .= $_;
-	    if (/\\end\{questao\}/) {
+	    if (/\\clearpage/) {
 		$noBloco = 0;
 		$questoes[$j] .= "\n";
 		$j++;
 	    }
 	}
-	# Grabs anything after last "\end{question}" ans stores it into
+	# Grabs anything after last "\clearpage" ans stores it into
 	# $footer.
-	if ($j==$num_quest){$_ =~ s/\\end\{questao\}//; $footer .= $_;}
+	if ($j==$num_quest){$_ =~ s/\\clearpage//; $footer .= $_;}
     }
     close(INPUT);
     return (@questoes,$footer);
 }
 
-# This subroutine receives an array os strings, stored in @_, consisting
-# of questions and shuffles it into @quest_shuf.
+# This subroutine receives an array os strings, stored in @_ and
+# shuffles it into @list_shuf.
 sub list_shuf {
-    my @temp = @_;
+    my @dummy = @_;
     my @list_shuf = ();
     
-    while (@temp) {
-	push(@list_shuf, splice(@temp, rand @temp, 1));
+    while (@dummy) {
+	push(@list_shuf, splice(@dummy, rand @dummy, 1));
     }
     return @list_shuf;
 }
@@ -124,29 +124,48 @@ sub list_shuf {
 # and returns it with shuffled alternatives within each question.
 sub grab_shuf_alt {
     my @out;
-    my $temp;
+    my $question;
 
-    foreach $temp (@_) {
+    foreach $question (@_) {
 	my @alternatives = ();
-	my @lines = split("\n", $temp);
+	my @lines = split("\n", $question);
 	my @linesaux = @lines;
+	my $temp='';
 
 	my $i = 0;
 	my $st_statement = '';
+
+	# Copies everything until alternatives environment
 	while ( ($i <= $#linesaux) && ($linesaux[$i] !~ /\\begin\{enumerate\}\[\\bf a\.\]/) ) {
 	    $st_statement .= $linesaux[$i]."\n";
 	    $i++;
 	}
-	
+	# Copies \begin{enumerate}[\bf a.]
 	$st_statement .= $linesaux[$i]."\n";
+	$i++;
 
 	while ( $i <= $#linesaux )  {
-	    # need to fix match below to grab all lines of alternatives
-	    if ($linesaux[$i] =~ /.*\\item.*/ ) {push(@alternatives, splice(@linesaux, $i, 1));}
+
+	    if ($linesaux[$i] =~ /.*\\item.*/ ) {
+		#Copies everything from this \item until the next one
+		$temp .= $linesaux[$i];
+		$i++;
+		my $j = $i;
+		while ( ($j <= $#linesaux) && ($linesaux[$j] !~ /.*\\item.*/) && ($linesaux[$j] !~ /.*\\end.*/)){
+		    $temp .= $linesaux[$j];
+		    $j++;
+		}
+		$temp .= "\n";
+		$i = $j;
+		# Old version: grab the line with \item and pushes it into @alternatives
+		# push(@alternatives, splice(@linesaux, $i, 1));
+	    }
 	    else {$i++;}
 	}
 
-	$temp = $st_statement . join("\n",list_shuf(@alternatives)) . "\n  \\end\{enumerate\}\n\\end{questao\}\n\n";
+	@alternatives = split("\n",$temp);
+	
+	$temp = $st_statement . join("\n",list_shuf(@alternatives)) . "\n  \\end\{enumerate\}\n\\end{questao\}\n\\clearpage\n\n";
 	push(@out, $temp);
     } 
     return @out;
