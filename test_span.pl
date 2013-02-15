@@ -10,7 +10,6 @@ my $input = "./$ARGV[1]";
 my $magic_number = $ARGV[0];
 
 # Tells how many questions in this test.
-
 open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
 
 my $num_quest = 0;
