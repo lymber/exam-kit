@@ -5,25 +5,18 @@ use warnings;
 
 # Class number.
 my $class = $ARGV[0];
-# Number os different tests.
+# Number of different tests.
 my $magic_number = $ARGV[1];
 # First, second, third, substitutive or rec test
 my $prova = $ARGV[2];
 
 # Insert the correct file name here when we know it
-my $input = "./sample.dat";
+my $input = "./sample$prova.dat";
 open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
 
 print "Lendo respostas da turma $class... \n";
 
-my $output=''; 
-if ( $class < 10 ) {$output = "./T0${\($class+1)}.html";} 
-else {$output = "./T${\($class+1)}.html";}
-
-open(OUTPUT,">", $output) or die "Can't open $input for appending: $!\n";
-
-select OUTPUT;
-hdr_print($class,$prova);
+my %notas_novas = ();
 
 while ( $_ = <INPUT> ) {
     #student id
@@ -32,6 +25,8 @@ while ( $_ = <INPUT> ) {
     my @answers = split('',lc(substr($_,47,16)));
     #student test type
     my $test = substr($_,79,2);
+
+    @{$notas_novas{$nusp}} = (@answers,$test);
 
     my $j;
     for ($j = 0; $j < $magic_number; $j++) {
@@ -44,66 +39,51 @@ while ( $_ = <INPUT> ) {
 	    for ( $k = 0; $k < 16; $k++ ) {
 		if ( $gabarito[$k] eq $answers[$k] ) { $acertos++; }
 		if ( $answers[$k] eq "*" ) {
-		    print STDOUT "  Erro de Leitura na questão ${\($k+1)} do aluno $nusp! ";
-		    print STDOUT "Suas respostas: @answers\n";
+		    print "  Erro de Leitura na questão ${\($k+1)} do aluno $nusp! ";
+		    print "Suas respostas: @answers\n";
 		}
 	    }
 	    close(ANSWERS);
-	    # Dirt trick to fix rounding grades like 1.25 to 1.3
-	    my $nota = $acertos*10/16+0.01;
-	    body_print(($nusp,$nota));
-	}
+	    my $nota = $acertos*10/16;
+	    $notas_novas{$nusp}=$nota;
+ 	}
     }
 }
 
-footer_print();
+print "Pronto! [${\($.-1)} alunos].\n";
+close(INPUT);
 
+# Starts to append new grades to the .dat file of that class.
+$input = "./T${\($class+1)}.dat";
+
+unless (-e $input) {
+ open(INPUT,">", $input) or die "Can't create $input: $!\n";;
+ }
+
+open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
+
+my %notas_atuais=();
+
+while ($_ = <INPUT>) {
+    chomp($_);
+    my $nusp = substr($_,0,7);
+    my $notas = substr($_,8);
+    $notas_atuais{$nusp} = $notas;
+}
+
+foreach (keys %notas_novas){
+    $notas_atuais{$_} .= $notas_novas{$_}." ";
+}
+
+close(INPUT);
+
+open(OUTPUT,">", $input) or die "Can't open $input for appending: $!\n";
+
+select OUTPUT;
+
+foreach (sort keys %notas_atuais) {
+    print "$_ $notas_atuais{$_}\n";
+}
 close(OUTPUT);
 
-print STDOUT "Pronto! [${\($.-1)} alunos].\n";
-
 exit 0;
-
-# Subroutines used in this program
-
-# Prints HTML header for class $i
-sub hdr_print {
-    print '<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  <head>
-    <style type="text/css">
-      table.center{margin-left: auto; margin-right: auto;}
-    </style>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';    
-    print "<title>MAT2457 - Notas da Turma ${\($_[0]+1)}</title>";
-    print '<link rel="stylesheet" href="style.css" type="text/css"
-	  media="screen"/>
-  </head>
-    <body>
-
-     <table class="center" frame="box" border="1" cellpadding="1"
-	     cellspacing="1" summary="Notas de Prova - MAT-2456."> 
-	<tr>
-	  <th>Aluno</th>';
-    print "
-	  <th>Prova $_[1]</th>
-	</tr>
-";
-}
-
-sub body_print {
-    print "
-	<tr>
-	  <td> $_[0] </td>";
-    printf("
-	  <td> %.1f </td>
-	</tr>",$_[1]);
-}
-
-sub footer_print {
-    print "
-      </table>
-  </body>
-</html>";
-}
