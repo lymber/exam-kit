@@ -10,11 +10,11 @@ my $i;
 
 # Reads each version to get the correct answers
 for ($i = 0; $i < $magic_number; $i++){
-    my $input = "./prova-$i.tex";
+    my $input = "./prova-0$i.tex";
     open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
     print "Gerando gabarito para prova em HTML para a prova tipo $i... ";
 
-    my $output = "./gabarito-$i.html";
+    my $output = "./gabarito-0$i.html";
     open(HTML, ">",$output) or die "Can't open $output for writing: $!\n";
 
     select HTML;
@@ -37,7 +37,7 @@ for ($i = 0; $i < $magic_number; $i++){
     print "Pronto!\n";
 
     print "Gerando arquivo texto com as respostas para a prova tipo $i... ";
-    $output = "./answers-$i.txt";
+    $output = "./answers-0$i.txt";
     open(ANSWERS, ">",$output) or die "Can't open $output for writing: $!\n";
     select ANSWERS;
     print @answers;
@@ -60,7 +60,7 @@ sub hdr_print {
       table.center{margin-left: auto; margin-right: auto;}
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';    
-    print "<title>MAT2457 - Gabarito Prova Tipo $_[0]</title>";
+    print "<title>MAT2457 - Gabarito Prova Tipo 0$_[0]</title>";
     print '<link rel="stylesheet" href="style.css" type="text/css"
 	  media="screen"/>
   </head>';
@@ -85,7 +85,7 @@ sub body_print {
 	</tr>";
     }
     print "
-      </table><br />
+      </table>
   </body>
 </html>";
 }

@@ -40,7 +40,7 @@ my $i = 0;
 # Where we actually write the permutations
 while ( $i < $magic_number ) {
     my @quest_copy = @questions;
-    my $output = "./prova-$i.tex";
+    my $output = "./prova-0$i.tex";
     open(OUTPUT,">",$output) or die "Can't open $output for writing: $!\n";
     print "Gerando prova $i... ";
 
