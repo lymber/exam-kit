@@ -3,6 +3,7 @@
 *.log
 *.out
 *.pdf
+*.html
 prova-*
 gabarito-*
 answers-*
