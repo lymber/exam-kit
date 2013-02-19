@@ -3,6 +3,12 @@
 use strict;
 use warnings;
 
+# Check correct call of program
+if ( $#ARGV != 1) {
+    print "Usage: $0 <tipos de provas> <prova original>\n";
+    exit 0;
+}
+
 # Original test LaTeX File, referres as MasterFile now on.
 my $input = "./$ARGV[1]";
 

@@ -3,6 +3,12 @@
 use strict;
 use warnings;
 
+# Check correct call of program
+if ( $#ARGV != 2 ) {
+    print "Usage: $0 <turma> <tipos de provas> <qual prova>\n";
+    exit 0;
+}
+
 # Class number.
 my $class = $ARGV[0];
 # Number of different tests.

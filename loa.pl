@@ -3,6 +3,12 @@
 use strict;
 use warnings;
 
+# Check correct call of program
+if ( $#ARGV != 0) {
+    print "Usage: $0 <tipos de provas>\n";
+    exit 0;
+}
+
 # Number of permutations of original test.
 my $magic_number = $ARGV[0];
 my $i;
