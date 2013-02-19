@@ -4,6 +4,7 @@
 *.out
 *.pdf
 *.html
+T*.dat
 prova-*
 gabarito-*
 answers-*
