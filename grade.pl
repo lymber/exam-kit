@@ -29,15 +29,21 @@ while ( $_ = <INPUT> ) {
     my $nusp = substr($_,40,7);
     #student answers
     my @answers = split('',lc(substr($_,47,16)));
+    #student class
+    my $turma = substr($_,77,2);
+    if ( $turma !~ /[01-14]/) {print "Aluno $nusp: não preencheu turma corretamente.\n";}
     #student test type
-    my $test = substr($_,79,2);
-
-    @{$notas_novas{$nusp}} = (@answers,$test);
+    my $test='';
+    if ( substr($_,79,2) !~ /[00-99]/ ){print "Aluno $nusp: tipo de prova inválido.\n";}
+    else {
+	$test = substr($_,79,2) % $magic_number;
+	@{$notas_novas{$nusp}} = (@answers,$test);
+    }
 
     my $j;
     for ($j = 0; $j < $magic_number; $j++) {
-	if ( $test eq "0$j" ) {
-	    my $ans_file = "./answers-$test.txt";
+	if ( $test eq "$j" ) {
+	    my $ans_file = "./answers-0$test.txt";
 	    open(ANSWERS,"<", $ans_file) or die "Can't open $ans_file for reading: $!\n";
 	    my @gabarito = split('',<ANSWERS>);
 	    my $acertos = 0;
@@ -155,7 +161,10 @@ media="screen"/>
       <th>Aluno</th>
 ';
     for ($i = 0; $i < $_[1]; $i++){
-	print "      <th>Prova ${\($i+1)}</th>\n";
+	print STDOUT "$i\n";
+	if ( $i < 3 ) {print "      <th>Prova ${\($i+1)}</th>\n";}
+	elsif ( $i == 3 )  {print "      <th>Prova Sub</th>\n";}
+	elsif ( $i == 4 )  {print "      <th>Prova Rec</th>\n";}
     }
     print "    </tr>
 ";
