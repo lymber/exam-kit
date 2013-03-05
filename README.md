@@ -23,11 +23,17 @@ one doing the following:
 
 * `loa`: list of answers. Given a LaTeX file created by test_span, loa
   reads it and create a text file containing a raw list of correct
-  answers to that version of the test.
+  answers to that version of the test and a HTML file with the formatted
+  answers.
 
 * `grade`: reads a file with the identification of students, its test
   version and its answers comparing that answers to the correct ones
   given by loa.
+
+Besides those three programs there are two scripts, `clone.sh` and
+`clean.sh`, that, respectivley, creates symbolic links to each HTML file
+created by `loa` (they are equal mod its argument) and cleans up all the
+automatically generated files.
 
 ## Licensing
 
