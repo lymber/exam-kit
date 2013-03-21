@@ -12,5 +12,5 @@ echo "Pronto!"
 
 #Limpeza das provas geradas por ./test_span.pl
 echo -n "Limpando provas geradas por ./test_span.pl... "
-rm -rf prova*.tex
+rm -rf mat2457-*.tex
 echo "Pronto!"
