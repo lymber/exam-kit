@@ -161,7 +161,6 @@ media="screen"/>
       <th>Aluno</th>
 ';
     for ($i = 0; $i < $_[1]; $i++){
-	print STDOUT "$i\n";
 	if ( $i < 3 ) {print "      <th>Prova ${\($i+1)}</th>\n";}
 	elsif ( $i == 3 )  {print "      <th>Prova Sub</th>\n";}
 	elsif ( $i == 4 )  {print "      <th>Prova Rec</th>\n";}
