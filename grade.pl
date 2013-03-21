@@ -17,7 +17,7 @@ my $magic_number = $ARGV[1];
 my $prova = $ARGV[2];
 
 # Insert the correct file name here when we know it
-my $input = "./sample$prova.dat";
+my $input = "./mat2457-p$prova-t$class.dat";
 open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
 
 print "Lendo respostas da turma $class... \n";
