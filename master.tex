@@ -7,19 +7,61 @@
 \usepackage{textcomp}
 \usepackage{mathpazo}
 \usepackage{utopia}
+\usepackage{graphicx}
 
 \usepackage[cm]{fullpage}
+
+\renewcommand{\arraystretch}{1.5}
 
 \begin{document}
 
 \twocolumn[\begin{@twocolumnfalse}
   \titulo{FUVEST 2013 --- Algumas questões}
   \subtitulo{Extraído para testar o gerador de provas.}
+
+\begin{tabular}{llll}
+  {\bf Nome:}&\underline{\hspace{15cm}}&{\bf NUSP:}&\underline{\hspace{5cm}}\\
+  &&&\\
+  {\bf Professor:}&\underline{\hspace{15cm}}&{\bf Turma:}&\underline{\hspace{5cm}}\\
+\end{tabular}
+
+\vspace{1cm}
+
+\section*{Instruções}
+
+\begin{enumerate}
+  \item A prova tem início às 7:30h e duração de 2 horas.
+  \item Não é permitido deixar a sala sem entregar a prova.
+  \item Todo material não necessário à prova (mochilas, bolsas,
+  calculadoras, agasalhos, bonés, celulares, livros, etc.) deve ficar na
+  frente da sala.
+  \item Sobre a carteira deve permanecer apenas lápis, caneta, borracha
+  e documento de identidade com foto.
+  \item É permitida a entrada na sala até às 8:00h e não é permitida a
+  saída da sala antes das 8:10h.
+  \item As respostas devem ser transferidas para a folha óptica durante
+  as 2 horas de prova (não há tempo extra para o preenchimento da folha
+  óptica).
+  \item Só destaque o gabarito do aluno (última folha) quando for
+  entregar a prova. Não esqueça de anotar o tipo de prova no gabarito do
+  aluno (para que você possa depois conferir suas respostas com o
+  gabarito oficial).
+  \item A folha óptica deve ser preenchida com caneta esferográfica azul
+  ou preta.
+  \item Para o correto preenchimento da folha óptica siga o exemplo
+  abaixo.
+\end{enumerate}
+
 \end{@twocolumnfalse}]
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=12cm]{gabarito-exemplo.jpg} % para gerar pdf    
+\end{figure}
 
 \thispagestyle{empty}
 
-\vspace{1cm}
+\cleardoublepage
 
 \begin{questao}
   Vinte times de futebol disputam a Série A do Campeonato Brasileiro,
@@ -349,6 +391,44 @@
   \end{enumerate}
 \end{questao}
 \clearpage
+
+\thispagestyle{empty}
+\twocolumn[\begin{@twocolumnfalse}
+  \titulo{Gabarito do Aluno}
+  \bigskip
+
+  \begin{tabular}{llll}
+    {\bf Nome:}&\underline{\hspace{15cm}}&{\bf NUSP:}&\underline{\hspace{5cm}}\\
+    &&&\\
+    {\bf Tipo de prova:}&\underline{\hspace{3cm}}&&\\
+  \end{tabular}
+
+  \vspace{1cm}
+
+\begin{center}
+  \begin{tabular}{cccccc}
+    &{\bf a}&{\bf b}&{\bf c}&{\bf d}&{\bf e}\\
+    {\bf Questão}&&&&&\\
+    1&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    2&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    3&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    4&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    5&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    6&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    7&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    8&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    9&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    10&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    11&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    12&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    13&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    14&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    15&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+    16&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}&\fbox{\phantom{M}}\\
+  \end{tabular}
+\end{center}
+
+\end{@twocolumnfalse}]
 
 \end{document}
 
