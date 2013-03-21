@@ -4,20 +4,22 @@ use strict;
 use warnings;
 
 # Check correct call of program
-if ( $#ARGV != 2 ) {
-    print "Usage: $0 <turma> <tipos de provas> <qual prova>\n";
+if ( $#ARGV != 3 ) {
+    print "Usage: $0 <ano> <qual prova> <turma> <tipos de provas> \n";
     exit 0;
 }
 
+# Year
+my $ano = $ARGV[0];
+# Which test?
+my $prova = $ARGV[1];
 # Class number.
-my $class = $ARGV[0];
+my $class = $ARGV[2];
 # Number of different tests.
-my $magic_number = $ARGV[1];
-# First, second, third, substitutive or rec test
-my $prova = $ARGV[2];
+my $magic_number = $ARGV[3];
 
-# Insert the correct file name here when we know it
-my $input = "./mat2457-p$prova-t$class.dat";
+# Input from optical reader
+my $input = "./mat2457-$ano-$prova-t$class.dat";
 open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
 
 print "Lendo respostas da turma $class... \n";
@@ -43,7 +45,7 @@ while ( $_ = <INPUT> ) {
     my $j;
     for ($j = 0; $j < $magic_number; $j++) {
 	if ( $test eq "$j" ) {
-	    my $ans_file = "./answers-0$test.txt";
+	    my $ans_file = "./mat2457-$ano-$prova-answers-0$test.txt";
 	    open(ANSWERS,"<", $ans_file) or die "Can't open $ans_file for reading: $!\n";
 	    my @gabarito = split('',<ANSWERS>);
 	    my $acertos = 0;
@@ -66,7 +68,7 @@ print "Pronto! [${\($.-1)} alunos].\n";
 close(INPUT);
 
 # Starts to append new grades to the .dat file of that class.
-$input = "./T$class.dat";
+$input = "./mat2457-$ano-t$class.dat";
 
 unless (-e $input) {
  open(INPUT,">", $input) or die "Can't create $input: $!\n";;
@@ -101,7 +103,7 @@ close(OUTPUT);
 # Creates HTML with current grades of this class
 
 open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
-my $output = "./T$class.html";
+my $output = "./mat2457-$ano-t$class.html";
 open(OUTPUT,">", $output) or die "Can't open $input for writing: $!\n";
 
 select OUTPUT;
@@ -156,7 +158,7 @@ media="screen"/>
 <body>
 
   <table class="center" frame="box" border="1" cellpadding="1"
-    cellspacing="1" summary="Notas de Prova - MAT-2456.">
+    cellspacing="1" summary="Notas de Prova - MAT-2457.">
     <tr>
       <th>Aluno</th>
 ';

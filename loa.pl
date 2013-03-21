@@ -4,27 +4,34 @@ use strict;
 use warnings;
 
 # Check correct call of program
-if ( $#ARGV != 0) {
-    print "Usage: $0 <tipos de provas>\n";
+if ( $#ARGV != 2) {
+    print "Usage: $0 <ano> <qual prova> <tipos de provas>\n";
     exit 0;
 }
 
+# Year
+my $ano = $ARGV[0];
+
+# Which test is this?
+my $prova = $ARGV[1];
+
 # Number of permutations of original test.
-my $magic_number = $ARGV[0];
+my $magic_number = $ARGV[2];
+
 my $i;
 
 
 # Reads each version to get the correct answers
 for ($i = 0; $i < $magic_number; $i++){
-    my $input = "./prova-0$i.tex";
+    my $input = "./mat2457-$ano-$prova-0$i.tex";
     open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
     print "Gerando gabarito para prova em HTML para a prova tipo $i... ";
 
-    my $output = "./gabarito-0$i.html";
+    my $output = "./mat2457-$ano-$prova-gabarito-0$i.html";
     open(HTML, ">",$output) or die "Can't open $output for writing: $!\n";
 
     select HTML;
-    hdr_print($i);
+    hdr_print($prova);
 
     my $j; # Counter of read alternatives;
     my @answers = ();
@@ -43,7 +50,7 @@ for ($i = 0; $i < $magic_number; $i++){
     print "Pronto!\n";
 
     print "Gerando arquivo texto com as respostas para a prova tipo $i... ";
-    $output = "./answers-0$i.txt";
+    $output = "./mat2457-$ano-$prova-answers-0$i.txt";
     open(ANSWERS, ">",$output) or die "Can't open $output for writing: $!\n";
     select ANSWERS;
     print @answers;
@@ -66,7 +73,7 @@ sub hdr_print {
       table.center{margin-left: auto; margin-right: auto;}
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';    
-    print "<title>MAT2457 - Gabarito Prova Tipo 0$_[0]</title>";
+    print "<title>MAT2457 - Gabarito Prova $_[0]</title>";
     print '<link rel="stylesheet" href="style.css" type="text/css"
 	  media="screen"/>
   </head>';
@@ -78,7 +85,7 @@ sub body_print {
     print '  <body>
 
      <table class="center" frame="box" border="1" cellpadding="1"
-	     cellspacing="1" summary="Locais de Prova - MAT-2456."> 
+	     cellspacing="1" summary="Gabarito - MAT-2457."> 
 	<tr>
 	  <th>Questão</th>
 	  <th>Resposta</th>

@@ -7,8 +7,8 @@ die () {
 }
 
 # Teste dos argumentos de entrada
-[ "$#" -eq 1 ] || die "Uso: `basename $0` <tipos de prova>. $# argumentos foram fornecidos, enquanto somente 1 é esperado."
-echo $1 | grep -E -q '^[0-9]+$' || die "Argumento é um inteiro, $1 foi fornecido."
+[ "$#" -eq 2 ] || die "Uso: `basename $0` <tipos de prova> <padrao no nome>. $# argumentos foram fornecidos, enquanto somente 2 são esperados."
+echo $1 | grep -E -q '^[0-9]+$' || die "Primeiro argumento é um inteiro, $1 foi fornecido."
 
 i="0";
 
@@ -20,8 +20,8 @@ while [ $i -lt $1 ]
     do
 	echo -en "\t Criando link $[$k*$1+$i], conguente a $i mod $1... "
 	if [ $[$k*$1+$i] -lt 10 ]
-	then ln -s gabarito-0$i.html gabarito-0$[$k*$1+$i].html
-	else ln -s gabarito-0$i.html gabarito-$[$k*$1+$i].html
+	then cp $2-0$i.html $2-0$[$k*$1+$i].html
+	else cp $2-0$i.html $2-$[$k*$1+$i].html
 	fi
 	echo "Pronto!"
 	k=$[$k+1]

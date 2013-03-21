@@ -4,7 +4,7 @@
 *.out
 *.pdf
 *.html
-T*.dat
+mat2457-*-t*.dat
 mat2457-*.tex
-gabarito-*
+mat2457-*.html
 answers-*
