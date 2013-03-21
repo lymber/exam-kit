@@ -4,16 +4,22 @@ use strict;
 use warnings;
 
 # Check correct call of program
-if ( $#ARGV != 1) {
-    print "Usage: $0 <tipos de provas> <prova original>\n";
+if ( $#ARGV != 3) {
+    print "Usage: $0 <ano> <qual prova> <tipos de provas> <arquivo de prova original>\n";
     exit 0;
 }
 
-# Original test LaTeX File, referres as MasterFile now on.
-my $input = "./$ARGV[1]";
+# Year
+my $ano = $ARGV[0];
+
+# Which test is this?
+my $prova = $ARGV[1];
 
 # Number of permutations of original test.
-my $magic_number = $ARGV[0];
+my $magic_number = $ARGV[2];
+
+# Original test LaTeX File, referres as MasterFile now on.
+my $input = "./$ARGV[3]";
 
 # Tells how many questions in this test.
 open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
@@ -32,7 +38,7 @@ print "A prova original contém $num_quest questões.\n";
 close(INPUT);
 
 # Get the header from MasterFile.
-my $header = get_hdr();
+my $header = get_hdr($input);
 
 # Get the questions from MasterFile.
 my @questions = get_quest_footer();
@@ -46,7 +52,7 @@ my $i = 0;
 # Where we actually write the permutations
 while ( $i < $magic_number ) {
     my @quest_copy = @questions;
-    my $output = "./prova-0$i.tex";
+    my $output = "./mat2457-$ano-$prova-0$i.tex";
     open(OUTPUT,">",$output) or die "Can't open $output for writing: $!\n";
     print "Gerando prova $i... ";
 
@@ -71,7 +77,7 @@ while ( $i < $magic_number ) {
 # included in the returning value.
 sub get_hdr {
     my $hdr='';
-    open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
+    open(INPUT,"<", $_[0]) or die "Can't open $_[0] for reading: $!\n";
     while ( ( $_ = <INPUT> ) && ( $_ !~ /\\begin\{questao\}/ ) ) {
 	$hdr .= $_;
     }
