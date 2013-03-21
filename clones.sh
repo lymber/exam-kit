@@ -20,8 +20,8 @@ while [ $i -lt $1 ]
     do
 	echo -en "\t Criando link $[$k*$1+$i], conguente a $i mod $1... "
 	if [ $[$k*$1+$i] -lt 10 ]
-	then cp $2-0$i.html $2-0$[$k*$1+$i].html
-	else cp $2-0$i.html $2-$[$k*$1+$i].html
+	then ln -P $2-0$i.html $2-0$[$k*$1+$i].html
+	else cp -P $2-0$i.html $2-$[$k*$1+$i].html
 	fi
 	echo "Pronto!"
 	k=$[$k+1]
