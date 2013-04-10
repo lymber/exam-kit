@@ -34,10 +34,10 @@ while ( $_ = <INPUT> ) {
     my @answers = split('',lc(substr($_,47,16)));
     #student class
     my $turma = substr($_,77,2);
-    if ( $turma !~ /[01-14]/) {print "Aluno $nusp: não preencheu turma corretamente.\n";}
+    if ( $turma !~ /[0]{1}[1-9]{1}|[1]{1}[0-3]{1}|(20){1}/) {print "Aluno $nusp, turma $turma: não preencheu turma corretamente.\n";}
     #student test type
     my $test='';
-    if ( substr($_,79,2) !~ /[00-99]/ ){print "Aluno $nusp: tipo de prova inválido.\n";}
+    if ( substr($_,79,2) !~ /[00-99]/ ){print "Aluno $nusp, turma $turma: tipo de prova inválido.\n";}
     else {
 	$test = substr($_,79,2) % $magic_number;
 	@{$notas_novas{$nusp}} = (@answers,$test);
@@ -54,7 +54,7 @@ while ( $_ = <INPUT> ) {
 	    for ( $k = 0; $k < 16; $k++ ) {
 		if ( $gabarito[$k] eq $answers[$k] ) { $acertos++; }
 		if ( $answers[$k] eq "*" ) {
-		    print "  Erro de Leitura na questão ${\($k+1)} do aluno $nusp! ";
+		    print "  Erro de Leitura na questão ${\($k+1)} do aluno $nusp, turma $turma! ";
 		    print "Suas respostas: @answers\n";
 		}
 	    }
