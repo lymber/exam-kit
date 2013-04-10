@@ -29,15 +29,15 @@ my %notas_novas = ();
 while ( $_ = <INPUT> ) {
     #student id
     my $nusp = substr($_,40,7);
-    if ( $nusp !~ /[0-9]{7}/) {print "Atenção: $nusp inválido.\n";}
+    if ( $nusp !~ /[0-9]{7}/) {print "  Atenção: $nusp inválido.\n";}
     #student answers
     my @answers = split('',lc(substr($_,47,16)));
     #student class
     my $turma = substr($_,77,2);
-    if ( $turma !~ /[0]{1}[1-9]{1}|[1]{1}[0-3]{1}|(20){1}/) {print "Aluno $nusp, turma $turma: não preencheu turma corretamente.\n";}
+    if ( $turma !~ /0[1-9]{1}|1[0-3]{1}|20/) {print "  Aluno $nusp, turma $turma: não preencheu turma corretamente.\n";}
     #student test type
     my $test='';
-    if ( substr($_,79,2) !~ /[00-99]/ ){print "Aluno $nusp, turma $turma: tipo de prova inválido.\n";}
+    if ( substr($_,79,2) !~ /[00-99]/ ){print "  Aluno $nusp, turma $turma: tipo de prova inválido.\n";}
     else {
 	$test = substr($_,79,2) % $magic_number;
 	@{$notas_novas{$nusp}} = (@answers,$test);
