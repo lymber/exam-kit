@@ -29,6 +29,7 @@ my %notas_novas = ();
 while ( $_ = <INPUT> ) {
     #student id
     my $nusp = substr($_,40,7);
+    if ( $nusp !~ /[0-9]{7}/) {print "Atenção: $nusp inválido.\n";}
     #student answers
     my @answers = split('',lc(substr($_,47,16)));
     #student class
