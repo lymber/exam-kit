@@ -66,6 +66,21 @@ while ( $_ = <INPUT> ) {
 }
 
 print "Pronto! [${\($.)} alunos].\n";
+# Class average
+my $media = 0;
+foreach (keys %notas_novas){
+    $media += $notas_novas{$_};
+}
+$media = round($media/$.);
+print "Média da turma: $media\n";
+# Class standard deviation
+my $desvpad = 0;
+foreach (keys %notas_novas){
+    $desvpad += ($notas_novas{$_} - $media)**2;
+}
+$desvpad = round(sqrt($desvpad/$.));
+print "Desvio Padrão da turma: $desvpad\n";
+
 close(INPUT);
 
 # Starts to append new grades to the .dat file of that class.
@@ -130,6 +145,17 @@ foreach (sort keys %table) {
     }
     print "    </tr>\n";
 }
+
+print "    <tr>\n";
+print "      <td>Média</td>\n";
+print "      <td>$media</td>\n";
+print "    </tr>\n";
+
+print "    <tr>\n";
+print "      <td>Desv. Pad.</td>\n";
+print "      <td>$desvpad</td>\n";
+print "    </tr>\n";
+
 
 footer_print();
 
