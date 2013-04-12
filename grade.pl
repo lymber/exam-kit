@@ -19,7 +19,7 @@ my $class = $ARGV[2];
 my $magic_number = $ARGV[3];
 
 # Input from optical reader
-my $input = "./mat2457-$ano-optica-t$class-$prova.dat";
+my $input = "./mat2457-$ano-optica-$prova-t$class.dat";
 open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
 
 print "Lendo respostas da turma $class... \n";
