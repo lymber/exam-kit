@@ -29,22 +29,22 @@ my %notas_novas = ();
 while ( $_ = <INPUT> ) {
     #student id
     my $nusp = substr($_,40,7);
-    if ( $nusp !~ /[0-9]{7}/) {print "  Atenção: $nusp inválido.\n";}
+    if ( $nusp !~ /[0-9]{7}/) {print "  Atenção: $nusp inválido na linha $..\n";}
     #student answers
     my @answers = split('',lc(substr($_,47,16)));
     #student class
     my $turma = substr($_,77,2);
-    if ( $turma !~ /0[1-9]{1}|1[0-3]{1}|20/) {print "  Aluno $nusp, turma $turma: não preencheu turma corretamente.\n";}
+    if ( $turma !~ /0[1-9]{1}|1[0-3]{1}|20/) {print "  Aluno $nusp, turma $turma, na linha $.: não preencheu turma corretamente.\n";}
     #student test type
     my $test='';
-    if ( substr($_,79,2) !~ /[00-99]/ ){print "  Aluno $nusp, turma $turma: tipo de prova inválido.\n";}
+    if ( substr($_,79,2) !~ /0[0-9]{1}|[1-9]{1}[0-9]{1}/ ){print "  Aluno $nusp, turma $turma, na linha $.: tipo de prova inválido.\n";}
     else {
 	$test = substr($_,79,2) % $magic_number;
 	@{$notas_novas{$nusp}} = (@answers,$test);
     }
-
     my $j;
     for ($j = 0; $j < $magic_number; $j++) {
+	my $linha = $.;
 	if ( $test eq "$j" ) {
 	    my $ans_file = "./mat2457-$ano-$prova-answers-0$test.txt";
 	    open(ANSWERS,"<", $ans_file) or die "Can't open $ans_file for reading: $!\n";
@@ -54,7 +54,7 @@ while ( $_ = <INPUT> ) {
 	    for ( $k = 0; $k < 16; $k++ ) {
 		if ( $gabarito[$k] eq $answers[$k] ) { $acertos++; }
 		if ( $answers[$k] eq "*" ) {
-		    print "  Erro de Leitura na questão ${\($k+1)} do aluno $nusp, turma $turma! ";
+		    print "  Erro de Leitura na questão ${\($k+1)} do aluno $nusp, turma $turma, na linha $linha. ";
 		    print "Suas respostas: @answers\n";
 		}
 	    }
@@ -65,7 +65,7 @@ while ( $_ = <INPUT> ) {
     }
 }
 
-print "Pronto! [${\($.-1)} alunos].\n";
+print "Pronto! [${\($.)} alunos].\n";
 close(INPUT);
 
 # Starts to append new grades to the .dat file of that class.
