@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use Term::ANSIColor;
 
 # Check correct call of program
 if ( $#ARGV != 3 ) {
@@ -29,15 +30,15 @@ my %notas_novas = ();
 while ( $_ = <INPUT> ) {
     #student id
     my $nusp = substr($_,40,7);
-    if ( $nusp !~ /[0-9]{7}/) {print "  Atenção: $nusp inválido na linha $..\n";}
+    if ( $nusp !~ /[0-9]{7}/) {print color("red"), "  Atenção: $nusp inválido na linha $..\n", color("reset");}
     #student answers
     my @answers = split('',lc(substr($_,47,16)));
     #student class
     my $turma = substr($_,77,2);
-    if ( $turma !~ /0[1-9]{1}|1[0-3]{1}|20/) {print "  Aluno $nusp, turma $turma, na linha $.: não preencheu turma corretamente.\n";}
+    if ( $turma !~ /0[1-9]{1}|1[0-3]{1}|20/) {print color("yellow"), "  Aluno $nusp, turma $turma, na linha $.: não preencheu turma corretamente.\n", color("reset");}
     #student test type
     my $test='';
-    if ( substr($_,79,2) !~ /0[0-9]{1}|[1-9]{1}[0-9]{1}/ ){print "  Aluno $nusp, turma $turma, na linha $.: tipo de prova inválido.\n";}
+    if ( substr($_,79,2) !~ /0[0-9]{1}|[1-9]{1}[0-9]{1}/ ){print color("red"), "  Aluno $nusp, turma $turma, na linha $.: tipo de prova inválido.\n", color("reset");}
     else {
 	$test = substr($_,79,2) % $magic_number;
 	@{$notas_novas{$nusp}} = (@answers,$test);
@@ -54,7 +55,7 @@ while ( $_ = <INPUT> ) {
 	    for ( $k = 0; $k < 16; $k++ ) {
 		if ( $gabarito[$k] eq $answers[$k] ) { $acertos++; }
 		if ( $answers[$k] eq "*" ) {
-		    print "  Erro de Leitura na questão ${\($k+1)} do aluno $nusp, turma $turma, na linha $linha. ";
+		    print color("red"), "  Erro de Leitura na questão ${\($k+1)} do aluno $nusp, turma $turma, na linha $linha. ", color("reset");
 		    print "Suas respostas: @answers\n";
 		}
 	    }
@@ -65,7 +66,7 @@ while ( $_ = <INPUT> ) {
     }
 }
 
-print "Pronto! [${\($.)} alunos].\n";
+print color("green"), "Pronto! [${\($.)} alunos].\n", color("reset");
 # Class average
 my $media = 0;
 foreach (keys %notas_novas){
