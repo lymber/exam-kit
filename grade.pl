@@ -84,81 +84,73 @@ print "Desvio Padrão da turma: $desvpad\n";
 
 close(INPUT);
 
-# Starts to append new grades to the .dat file of that class.
-$input = "./mat2457-$ano-t$class.dat";
+# Creates a file with ids and new grades on this test to that class.
+my $output = "./mat2457-$ano-t$class-$prova.dat";
 
-unless (-e $input) {
- open(INPUT,">", $input) or die "Can't create $input: $!\n";;
- }
-
-open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
-
-my %notas_atuais=();
-
-while ($_ = <INPUT>) {
-    chomp($_);
-    my $nusp = substr($_,0,7);
-    my $notas = substr($_,8);
-    $notas_atuais{$nusp} = $notas;
+if (-e $output) {
+    print color("yellow"), "Arquivo de saída $output já existente, não vamos mexer nele. Nada gravado!\n", color("reset");}
+else {
+    open(OUTPUT,">", $output) or die "Can't create $output: $!\n";
+    select OUTPUT;
+    foreach (sort keys %notas_novas){print "$_ $notas_novas{$_}\n";};
+    print "Média: $media\n";
+    print "Desvio Padrão: $desvpad\n"; 
+    close(OUTPUT);
 }
 
-foreach (keys %notas_novas){
-    $notas_atuais{$_} .= $notas_novas{$_}." ";
-}
+select STDOUT;
 
-close(INPUT);
+# open(OUTPUT,">", $input) or die "Can't open $input for writing: $!\n";
 
-open(OUTPUT,">", $input) or die "Can't open $input for writing: $!\n";
+# select OUTPUT;
 
-select OUTPUT;
+# foreach (sort keys %notas_atuais) {
+#     print "$_ $notas_atuais{$_}\n";
+# }
+# close(OUTPUT);
 
-foreach (sort keys %notas_atuais) {
-    print "$_ $notas_atuais{$_}\n";
-}
-close(OUTPUT);
+# # Creates HTML with current grades of this class
 
-# Creates HTML with current grades of this class
+# open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
+# my $output = "./mat2457-$ano-t$class.html";
+# open(OUTPUT,">", $output) or die "Can't open $input for writing: $!\n";
 
-open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
-my $output = "./mat2457-$ano-t$class.html";
-open(OUTPUT,">", $output) or die "Can't open $input for writing: $!\n";
+# select OUTPUT;
 
-select OUTPUT;
+# my %table = ();
+# my @notas = ();
 
-my %table = ();
-my @notas = ();
+# while ($_ = <INPUT>) {
+#     #student id
+#     my $nusp = substr($_,0,7);
+#     #student answers
+#     @notas = split(' ',substr($_,,8));
+#     @{$table{$nusp}} = @notas;
+# }
 
-while ($_ = <INPUT>) {
-    #student id
-    my $nusp = substr($_,0,7);
-    #student answers
-    @notas = split(' ',substr($_,,8));
-    @{$table{$nusp}} = @notas;
-}
+# hdr_print($class,$#notas+1);
 
-hdr_print($class,$#notas+1);
+# foreach (sort keys %table) {
+#     print "    <tr>\n";
+#     print "      <td>$_</td>\n";
+#     foreach (@{$table{$_}}){
+#     print "      <td>$_</td>\n";
+#     }
+#     print "    </tr>\n";
+# }
 
-foreach (sort keys %table) {
-    print "    <tr>\n";
-    print "      <td>$_</td>\n";
-    foreach (@{$table{$_}}){
-    print "      <td>$_</td>\n";
-    }
-    print "    </tr>\n";
-}
+# print "    <tr>\n";
+# print "      <td>Média</td>\n";
+# print "      <td>$media</td>\n";
+# print "    </tr>\n";
 
-print "    <tr>\n";
-print "      <td>Média</td>\n";
-print "      <td>$media</td>\n";
-print "    </tr>\n";
-
-print "    <tr>\n";
-print "      <td>Desv. Pad.</td>\n";
-print "      <td>$desvpad</td>\n";
-print "    </tr>\n";
+# print "    <tr>\n";
+# print "      <td>Desv. Pad.</td>\n";
+# print "      <td>$desvpad</td>\n";
+# print "    </tr>\n";
 
 
-footer_print();
+# footer_print();
 
 exit 0;
 
