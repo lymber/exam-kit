@@ -4,7 +4,7 @@
 *.out
 *.pdf
 *.html
-mat2457-*-t1.dat
+mat2457-2013-t1-p*.dat
 mat2457-*.tex
 mat2457-*.html
 mat2457-*-answers-*.txt
