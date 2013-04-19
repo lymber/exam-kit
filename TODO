@@ -1,6 +1,4 @@
-* Fix problems with the variable spectrum of students at each test.
+* Modularize the "duplicated" code for first test initialization and
+  forecoming tests in ./merge_table.pl
 
-  - Idea: Get the lastest list of students for each class and use it to
-   create a new .dat file appending the grade to the current test or
-   whitespaces when one doesn't show up to the previous dat file. Then
-   another program would use this final .dat to create the HTML file.
+* Fix problems with the variable spectrum of students at each test. [Done: 2013-04-19]
