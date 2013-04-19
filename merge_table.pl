@@ -6,17 +6,17 @@ use Term::ANSIColor;
 
 # First run (inicialization of the file)
 if ( $#ARGV == 2 ){
-# Year
+    # Year
     my $ano = $ARGV[0];
-# Class Number
+    # Class Number
     my $class = $ARGV[1];
-# Enrolled students
+    # Enrolled students
     my $matriculados = "../dados/mat2457-$ano-matriculados-t$class.csv";
     open(MATRICULADOS,"<", $matriculados) or die "Can't open $matriculados for reading: $!\n";
-# Tests grades already annouced
+    # Tests grades already annouced
     my $curr_tests = "./mat2457-$ano-t$class-$ARGV[2].dat";
     open(CURRTESTS,"<", $curr_tests) or die "Can't open $curr_tests for reading: $!\n";
-# Output
+    # Output
     my $output = "./mat2457-$ano-t$class-pronto-$ARGV[2].dat";
     open(OUTPUT,">", $output) or die "Can't open $output for writing: $!\n";
 
@@ -30,7 +30,8 @@ if ( $#ARGV == 2 ){
 	my $nusp = substr($_,0,7);
 	$hash_notas{$nusp} = "";
     }
-    
+    $hash_notas{average} = "";
+    $hash_notas{strddev} = "";
     close(MATRICULADOS);
     
     my %hash_divulgadas = ();
@@ -46,15 +47,69 @@ if ( $#ARGV == 2 ){
     }
     foreach (sort keys %hash_notas){
 	if ( !defined($hash_divulgadas{$_}) ){$hash_notas{$_}="- ";}
-	else{$hash_notas{$_}=$hash_divulgadas{$_};}
+	else{$hash_notas{$_}=$hash_divulgadas{$_}." ";}
     }
     
     select OUTPUT;
     foreach (sort keys %hash_notas) {
 	print "$_ $hash_notas{$_}\n";
     }
+    close(OUTPUT);
+
     select STDOUT;
     print color("green"), "Pronto! [Arquivo com as notas da primeira prova preparado.]\n", color("reset");
+
+    print "Gerando o arquivo HTML... ";
+
+    # Time to write the HTML file
+
+    #We use the new shining merged dat file to create HTML table
+    my $merged_file = $output;
+
+    open(MERGED_FILE,"<",$merged_file) or die "Can't open $merged_file for reading: $!\n";
+
+    my %table = ();
+    my @notas_line = ();
+    
+    while ($_ = <MERGED_FILE>) {
+	chomp($_);
+	#student id
+	my $nusp = substr($_,0,7);
+	#student answers
+	@notas_line = split(' ',substr($_,,8));
+	@{$table{$nusp}} = @notas_line;
+    }
+    close(MERGED_FILE);
+
+    my $html_file = "./mat2457-$ano-t$class.html";
+    open(HTML_FILE,">",$html_file) or die "Can't open $html_file for writing: $!\n";
+
+    select HTML_FILE;
+    
+    hdr_print($class);
+
+    my $i=0;
+    my $bgcolor;
+    foreach (sort keys %table) {
+	if ($i %2 == 0) {$bgcolor="claro";}
+	else{$bgcolor="escuro";}
+	if ($_ eq "average" || $_ eq "strddev"){$bgcolor="header";}
+	$i++;
+	print "    <tr class=\"$bgcolor\">\n";
+	if ($_ =~ /[0-9]{7}/){print "      <td>$_</td>\n";}
+	elsif ($_ eq "average"){print "      <td><strong>Média</strong></td>\n";}
+	else{print "      <td><strong>Desvio Padrão<strong></td>\n";}
+	foreach (@{$table{$_}}){print "      <td>$_</td>\n";}
+	for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
+	print "    </tr>\n";
+    }
+
+    footer_print();
+
+    close(HTML_FILE);
+
+    select STDOUT;
+    print "Pronto!\n";
     exit 0;
 }
 
@@ -80,10 +135,6 @@ open(CURRTESTS,"<", $curr_tests) or die "Can't open $curr_tests for reading: $!\
 my $new_test = "./mat2457-$ano-t$class-$ARGV[3].dat";
 open(NEWTEST,"<", $new_test) or die "Can't open $new_test for reading: $!\n";
 
-# Output file
-my $output = "./mat2457-$ano-t$class-pronto-$ARGV[2]$ARGV[3].dat";
-open(OUTPUT,">",$output) or die "Can't open $output for reading: $!\n";
-
 my %hash_notas = ();
 
 while( $_ = <MATRICULADOS> ){
@@ -94,11 +145,12 @@ while( $_ = <MATRICULADOS> ){
     my $nusp = substr($_,0,7);
     $hash_notas{$nusp} = "";
 }
-
+$hash_notas{average} = "";
+$hash_notas{strddev} = "";
 close(MATRICULADOS);
 
 my %hash_divulgadas = ();
-my $notas_divulgadas = '';
+my $notas_divulgadas = "";
 
 while( $_ = <CURRTESTS> ){
     chomp($_);
@@ -108,11 +160,9 @@ while( $_ = <CURRTESTS> ){
     $notas_divulgadas = substr($_,,8);
     $hash_divulgadas{$nusp} = $notas_divulgadas;
 }
-
 close(CURRTESTS);
 
 my %hash_novas = ();
-
 while( $_ = <NEWTEST> ){
     chomp($_);
     #student id
@@ -120,12 +170,11 @@ while( $_ = <NEWTEST> ){
     #student grades
     $hash_novas{$nusp} = substr($_,,8);
 }
-
 close(NEWTEST);
 
 foreach (sort keys %hash_notas){
     if ( defined($hash_divulgadas{$_}) && defined($hash_novas{$_}) ){
-	$hash_notas{$_} = $hash_divulgadas{$_}.$hash_novas{$_};
+	$hash_notas{$_} = $hash_divulgadas{$_}.$hash_novas{$_}." ";
     }
     elsif (defined($hash_divulgadas{$_})){
 	$hash_notas{$_}=$hash_divulgadas{$_}."- ";
@@ -133,9 +182,118 @@ foreach (sort keys %hash_notas){
     else {$hash_notas{$_}="- ";}
 }
 
+# Output file
+my $output = "./mat2457-$ano-t$class-pronto-$ARGV[2]$ARGV[3].dat";
+open(OUTPUT,">",$output) or die "Can't open $output for writing: $!\n";
+
 select OUTPUT;
 foreach (sort keys %hash_notas) {
     print "$_ $hash_notas{$_}\n";
 }
+close(OUTPUT);
+
+select STDOUT;
+
+print color("green"),"Pronto! [Arquivos intercalados]\n",color("reset");
+
+print "Gerando arquivo HTML... ";
+
+# Time to write the HTML file
+
+#We use the new shining merged dat file to create HTML table
+my $merged_file = $output;
+open(MERGED_FILE,"<",$merged_file) or die "Can't open $merged_file for reading: $!\n";
+
+my %table = ();
+my @notas_line = ();
+
+while ($_ = <MERGED_FILE>) {
+    chomp($_);
+    #student id
+    my $nusp = substr($_,0,7);
+    #student answers
+    @notas_line = split(' ',substr($_,,8));
+    @{$table{$nusp}} = @notas_line;
+}
+
+close(MERGED_FILE);
+
+my $html_file = "./mat2457-$ano-t$class.html";
+open(HTML_FILE,">",$html_file) or die "Can't open $html_file for writing: $!\n";
+
+select HTML_FILE;
+
+hdr_print($class);
+
+my $i=0;
+my $bgcolor;
+foreach (sort keys %table) {
+    if ($i %2 == 0) {$bgcolor="claro";}
+    else{$bgcolor="escuro";}
+    if ($_ eq "average" || $_ eq "strddev"){$bgcolor="header";}
+    $i++;
+    print "    <tr class=\"$bgcolor\">\n";
+    if ($_ =~ /[0-9]{7}/){print "      <td>$_</td>\n";}
+    elsif ($_ eq "average"){print "      <td><strong>Média</strong></td>\n";}
+    else{print "      <td><strong>Desvio Padrão<strong></td>\n";}
+    foreach (@{$table{$_}}){
+	print "      <td>$_</td>\n";
+    }
+    for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
+    print "    </tr>\n";
+}
+
+footer_print();
+
+close(HTML_FILE);
+
+select STDOUT;
+print "Pronto!\n";
 
 exit 0;
+
+#Subroutines
+
+sub round {
+    if ( ($_[0]*100) % 10 >= 5 ){return (int($_[0]*10+1))/10;}
+    else {return (int($_[0]*10))/10}
+}
+
+sub hdr_print {
+    my $i;
+    print '<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style type="text/css">
+  table.center{margin-left: auto; margin-right: auto;}
+  tr.header{background-color: #909090;}
+  tr.branco{background-color: #ffffff;}
+  tr.escuro{background-color: #bcbcbc;}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+    print "<title>MAT2457 - Notas da Turma $_[0]</title>";
+    print '<link rel="stylesheet" href="style.css" type="text/css"
+media="screen"/>
+</head>
+<body>
+
+  <table class="center" frame="box" border="1" cellpadding="1"
+    cellspacing="1" summary="Notas de Prova - MAT-2457.">
+    <tr class="header">
+      <th>Aluno</th>
+      <th>Prova 1</th>
+      <th>Prova 2</th>
+      <th>Prova 3</th>
+      <th>Prova Sub</th>
+      <th>Prova Rec</th>
+    </tr>
+';
+}
+
+sub footer_print {
+    print "  </table>
+
+</body>
+</html>";
+}
