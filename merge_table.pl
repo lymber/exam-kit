@@ -278,6 +278,8 @@ media="screen"/>
 </head>
 <body>
 
+  <h2>Atenção! Está aprovado o aluno cujas notas satisfizerem 2P<sub>1</sub>+3P<sub>2</sub>+3P<sub>3</sub>&ge;39,6.</h2>
+
   <table class="center" frame="box" border="1" cellpadding="1"
     cellspacing="1" summary="Notas de Prova - MAT-2457.">
     <tr class="header">
