@@ -236,10 +236,19 @@ foreach (sort keys %table) {
     if ($_ =~ /[0-9]{7}/){print "      <td>$_</td>\n";}
     elsif ($_ eq "average"){print "      <td><strong>Média</strong></td>\n";}
     else{print "      <td><strong>Desvio Padrão<strong></td>\n";}
+    my @provas = ();
+    my $j=0;
     foreach (@{$table{$_}}){
 	print "      <td>$_</td>\n";
+	$provas[$j]=$_;
+	$j++;
     }
+    foreach (@provas){
+	if ($_ eq "-") {$_=0;}
+    }
+    my $media = round((2*$provas[0]+3*$provas[1]+3*$provas[2])/8);
     for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
+    print "      <td>$media</td>\n";
     print "    </tr>\n";
 }
 
@@ -278,8 +287,6 @@ media="screen"/>
 </head>
 <body>
 
-  <h2>Atenção! Está aprovado o aluno cujas notas satisfizerem 2P<sub>1</sub>+3P<sub>2</sub>+3P<sub>3</sub>&ge;39,6.</h2>
-
   <table class="center" frame="box" border="1" cellpadding="1"
     cellspacing="1" summary="Notas de Prova - MAT-2457.">
     <tr class="header">
@@ -289,6 +296,7 @@ media="screen"/>
       <th>Prova 3</th>
       <th>Prova Sub</th>
       <th>Prova Rec</th>
+      <th>Média</th>
     </tr>
 ';
 }
