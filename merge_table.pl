@@ -264,7 +264,7 @@ exit 0;
 #Subroutines
 
 sub round {
-    if ( ($_[0]*100) % 10 >= 5 ){return (int($_[0]*10+1))/10;}
+    if ( ($_[0]*100+0.1) % 10 >= 5 ){return (int($_[0]*10+1))/10;}
     else {return (int($_[0]*10))/10}
 }
 
