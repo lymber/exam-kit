@@ -246,7 +246,7 @@ foreach (sort keys %table) {
     foreach (@provas){
 	if ($_ eq "-") {$_=0;}
     }
-    my $media = round((2*$provas[0]+3*$provas[1]+3*$provas[2])/8);
+    my $media = sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[2])/8+1/1024);
     for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
     print "      <td>$media</td>\n";
     print "    </tr>\n";
@@ -264,7 +264,7 @@ exit 0;
 #Subroutines
 
 sub round {
-    if ( ($_[0]*100+0.1) % 10 >= 5 ){return (int($_[0]*10+1))/10;}
+    if ( ($_[0]*100) % 10 >= 5 ){return (int($_[0]*10+1))/10;}
     else {return (int($_[0]*10))/10}
 }
 
