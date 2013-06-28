@@ -243,12 +243,23 @@ foreach (sort keys %table) {
 	$provas[$j]=$_;
 	$j++;
     }
+
+    my $fez_sub = 0;
+    if ($provas[3] ne "-") {$fez_sub = 1}
+
     foreach (@provas){
 	if ($_ eq "-") {$_=0;}
     }
-    my $media = sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[2])/8+1/1024);
+
+    my $final;
+    if ($fez_sub) {
+	my @medias = (sprintf("%.1f",(2*$provas[3]+3*$provas[1]+3*$provas[2])/8+1/1024), sprintf("%.1f",(2*$provas[0]+3*$provas[3]+3*$provas[2])/8+1/1024), sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[3])/8+1/1024));
+	$final = max(@medias)
+    }
+    else {$final = sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[2])/8+1/1024);};
+ 
     for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
-    print "      <td>$media</td>\n";
+    print "      <td>$final</td>\n";
     print "    </tr>\n";
 }
 
@@ -262,6 +273,16 @@ print "Pronto!\n";
 exit 0;
 
 #Subroutines
+
+sub max {
+    my $loc_max=0;
+    my $cur_avg;
+
+    foreach $cur_avg (@_) {
+	if ($cur_avg > $loc_max) {$loc_max = $cur_avg}
+    }
+    return $loc_max;
+}
 
 sub round {
     if ( ($_[0]*100) % 10 >= 5 ){return (int($_[0]*10+1))/10;}
