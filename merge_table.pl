@@ -247,19 +247,35 @@ foreach (sort keys %table) {
     my $fez_sub = 0;
     if ($provas[3] ne "-") {$fez_sub = 1}
 
+    my $fez_rec = 0;
+    if ($provas[4] ne "-") {$fez_rec = 1}
+
     foreach (@provas){
 	if ($_ eq "-") {$_=0;}
     }
 
-    my $final;
+    my $com_sub;
     if ($fez_sub) {
 	my @medias = (sprintf("%.1f",(2*$provas[3]+3*$provas[1]+3*$provas[2])/8+1/1024), sprintf("%.1f",(2*$provas[0]+3*$provas[3]+3*$provas[2])/8+1/1024), sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[3])/8+1/1024));
-	$final = max(@medias)
+	$com_sub = max(@medias);
     }
-    else {$final = sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[2])/8+1/1024);};
+    else {$com_sub = sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[2])/8+1/1024);
+    };
  
+    my $final;
+    if ($fez_rec) {
+	$final = sprintf("%.1f",(2*$com_sub+3*$provas[4])/5+1/1024)
+    }
+    else {$final = $com_sub;};
+
     for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
-    print "      <td>$final</td>\n";
+
+    if ($com_sub >= 5) {print "      <td class=\"passou\">$com_sub</td>\n";}
+    elsif ($com_sub < 3) {print "      <td class=\"bombou\">$com_sub</td>\n";}
+    else {print "      <td class=\"rec\">$com_sub</td>\n";}
+
+    if ($final >= 5) {print "      <td class=\"passou\">$final</td>\n";}
+    else {print "      <td class=\"bombou\">$final</td>\n";}
     print "    </tr>\n";
 }
 
@@ -298,8 +314,11 @@ sub hdr_print {
 <style type="text/css">
   table.center{margin-left: auto; margin-right: auto;}
   tr.header{background-color: #909090;}
-  tr.branco{background-color: #ffffff;}
+  tr.branco{background-color: white;}
   tr.escuro{background-color: #bcbcbc;}
+  td.passou{color: seagreen}
+  td.bombou{color: darkred}
+  td.rec{color: darkgoldenrod}
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
     print "<title>MAT2457 - Notas da Turma $_[0]</title>";
@@ -317,7 +336,8 @@ media="screen"/>
       <th>Prova 3</th>
       <th>Prova Sub</th>
       <th>Prova Rec</th>
-      <th>Média</th>
+      <th>Média s/ Rec.</th>
+      <th>Média Final</th>
     </tr>
 ';
 }
