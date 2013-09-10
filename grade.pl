@@ -5,22 +5,24 @@ use warnings;
 use Term::ANSIColor;
 
 # Check correct call of program
-if ( $#ARGV != 3 ) {
-    print "Usage: $0 <ano> <qual prova> <turma> <tipos de provas> \n";
+if ( $#ARGV != 4 ) {
+    print "Usage: $0 <sigla> <ano> <qual prova> <turma> <tipos de provas> \n";
     exit 0;
 }
 
+# Course
+my $disc = $ARGV[0];
 # Year
-my $ano = $ARGV[0];
+my $ano = $ARGV[1];
 # Which test?
-my $prova = $ARGV[1];
+my $prova = $ARGV[2];
 # Class number.
-my $class = $ARGV[2];
+my $class = $ARGV[3];
 # Number of different tests.
-my $magic_number = $ARGV[3];
+my $magic_number = $ARGV[4];
 
 # Input from optical reader
-my $input = "./mat2457-$ano-optica-$prova-t$class.dat";
+my $input = "./$disc-$ano-optica-$prova-t$class.dat";
 open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
 
 print "Lendo respostas da turma $class... \n";
@@ -47,7 +49,7 @@ while ( $_ = <INPUT> ) {
     for ($j = 0; $j < $magic_number; $j++) {
 	my $linha = $.;
 	if ( $test eq "$j" ) {
-	    my $ans_file = "./mat2457-$ano-$prova-answers-0$test.txt";
+	    my $ans_file = "./$disc-$ano-$prova-answers-0$test.txt";
 	    open(ANSWERS,"<", $ans_file) or die "Can't open $ans_file for reading: $!\n";
 	    my @gabarito = split('',<ANSWERS>);
 	    my $acertos = 0;
@@ -85,7 +87,7 @@ print "Desvio Padrão da turma: $desvpad\n";
 close(INPUT);
 
 # Creates a file with ids and new grades on this test to that class.
-my $output = "./mat2457-$ano-t$class-$prova.dat";
+my $output = "./$disc-$ano-t$class-$prova.dat";
 
 if (-e $output) {
     print color("yellow"), "Arquivo de saída $output já existente, não vamos mexer nele. Nada gravado!\n", color("reset");}

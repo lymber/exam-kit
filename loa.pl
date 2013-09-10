@@ -4,30 +4,29 @@ use strict;
 use warnings;
 
 # Check correct call of program
-if ( $#ARGV != 2) {
-    print "Usage: $0 <ano> <qual prova> <tipos de provas>\n";
+if ( $#ARGV != 3) {
+    print "Usage: $0 <sigla> <ano> <qual prova> <tipos de provas>\n";
     exit 0;
 }
 
+#Course
+my $disc = $ARGV[0];
 # Year
-my $ano = $ARGV[0];
-
+my $ano = $ARGV[1];
 # Which test is this?
-my $prova = $ARGV[1];
-
+my $prova = $ARGV[2];
 # Number of permutations of original test.
-my $magic_number = $ARGV[2];
+my $magic_number = $ARGV[3];
 
 my $i;
 
-
 # Reads each version to get the correct answers
 for ($i = 0; $i < $magic_number; $i++){
-    my $input = "./mat2457-$ano-$prova-0$i.tex";
+    my $input = "./$disc-$ano-$prova-0$i.tex";
     open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
     print "Gerando gabarito para prova em HTML para a prova tipo $i... ";
 
-    my $output = "./mat2457-$ano-$prova-gabarito-0$i.html";
+    my $output = "./$disc-$ano-$prova-gabarito-0$i.html";
     open(HTML, ">",$output) or die "Can't open $output for writing: $!\n";
 
     select HTML;
@@ -50,7 +49,7 @@ for ($i = 0; $i < $magic_number; $i++){
     print "Pronto!\n";
 
     print "Gerando arquivo texto com as respostas para a prova tipo $i... ";
-    $output = "./mat2457-$ano-$prova-answers-0$i.txt";
+    $output = "./$disc-$ano-$prova-answers-0$i.txt";
     open(ANSWERS, ">",$output) or die "Can't open $output for writing: $!\n";
     select ANSWERS;
     print @answers;
@@ -73,7 +72,7 @@ sub hdr_print {
       table.center{margin-left: auto; margin-right: auto;}
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';    
-    print "<title>MAT2457 - Gabarito Prova $_[0]</title>";
+    print "<title>uc($disc) - Gabarito Prova $_[0]</title>";
     print '<link rel="stylesheet" href="style.css" type="text/css"
 	  media="screen"/>
   </head>';
@@ -85,7 +84,7 @@ sub body_print {
     print '  <body>
 
      <table class="center" frame="box" border="1" cellpadding="1"
-	     cellspacing="1" summary="Gabarito - MAT-2457."> 
+	     cellspacing="1" summary="Gabarito - uc($disc)."> 
 	<tr>
 	  <th>Questão</th>
 	  <th>Resposta</th>

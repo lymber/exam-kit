@@ -5,19 +5,21 @@ use warnings;
 use Term::ANSIColor;
 
 # First run (inicialization of the file)
-if ( $#ARGV == 2 ){
+if ( $#ARGV == 3 ){
+    # Course
+    my $disc = $ARGV[0];
     # Year
-    my $ano = $ARGV[0];
+    my $ano = $ARGV[1];
     # Class Number
-    my $class = $ARGV[1];
+    my $class = $ARGV[2];
     # Enrolled students
-    my $matriculados = "../dados/mat2457-$ano-matriculados-t$class.csv";
+    my $matriculados = "../dados/$disc-$ano-matriculados-t$class.csv";
     open(MATRICULADOS,"<", $matriculados) or die "Can't open $matriculados for reading: $!\n";
     # Tests grades already annouced
-    my $curr_tests = "./mat2457-$ano-t$class-$ARGV[2].dat";
+    my $curr_tests = "./$disc-$ano-t$class-$ARGV[2].dat";
     open(CURRTESTS,"<", $curr_tests) or die "Can't open $curr_tests for reading: $!\n";
     # Output
-    my $output = "./mat2457-$ano-t$class-pronto-$ARGV[2].dat";
+    my $output = "./$disc-$ano-t$class-pronto-$ARGV[2].dat";
     open(OUTPUT,">", $output) or die "Can't open $output for writing: $!\n";
 
     my %hash_notas = ();
@@ -81,7 +83,7 @@ if ( $#ARGV == 2 ){
     }
     close(MERGED_FILE);
 
-    my $html_file = "./mat2457-$ano-t$class.html";
+    my $html_file = "./$disc-$ano-t$class.html";
     open(HTML_FILE,">",$html_file) or die "Can't open $html_file for writing: $!\n";
 
     select HTML_FILE;
@@ -114,25 +116,27 @@ if ( $#ARGV == 2 ){
 }
 
 # Check correct call of program
-if ( $#ARGV != 3 || $ARGV[0] !~ /[0-9]{4}/ || $ARGV[1] !~ /0[1-9]{1}|1[0-3]{1}|20/) {
-    print "Usage: $0 <ano> <turma> <current_tests> <newtest>\n";
+if ( $#ARGV != 4 || $ARGV[1] !~ /[0-9]{4}/ || $ARGV[2] !~ /0[1-9]{1}|1[0-3]{1}|20/) {
+    print "Usage: $0 <sigla> <ano> <turma> <current_tests> <newtest>\n";
     exit 0;
 }
 
+# Course
+my $disc = $ARGV[0];
 # Year
-my $ano = $ARGV[0];
+my $ano = $ARGV[1];
 # Class Number
-my $class = $ARGV[1];
+my $class = $ARGV[2];
 
 # Enrolled students
-my $matriculados = "../dados/mat2457-$ano-matriculados-t$class.csv";
+my $matriculados = "../dados/$disc-$ano-matriculados-t$class.csv";
 open(MATRICULADOS,"<", $matriculados) or die "Can't open $matriculados for reading: $!\n";
 
 # Tests grades already annouced
-my $curr_tests = "./mat2457-$ano-t$class-pronto-$ARGV[2].dat";
+my $curr_tests = "./$disc-$ano-t$class-pronto-$ARGV[3].dat";
 open(CURRTESTS,"<", $curr_tests) or die "Can't open $curr_tests for reading: $!\n";
 # Test grades to be merged
-my $new_test = "./mat2457-$ano-t$class-$ARGV[3].dat";
+my $new_test = "./$disc-$ano-t$class-$ARGV[4].dat";
 open(NEWTEST,"<", $new_test) or die "Can't open $new_test for reading: $!\n";
 
 my %hash_notas = ();
@@ -183,7 +187,7 @@ foreach (sort keys %hash_notas){
 }
 
 # Output file
-my $output = "./mat2457-$ano-t$class-pronto-$ARGV[2]$ARGV[3].dat";
+my $output = "./$disc-$ano-t$class-pronto-$ARGV[3]$ARGV[4].dat";
 open(OUTPUT,">",$output) or die "Can't open $output for writing: $!\n";
 
 select OUTPUT;
@@ -218,7 +222,7 @@ while ($_ = <MERGED_FILE>) {
 
 close(MERGED_FILE);
 
-my $html_file = "./mat2457-$ano-t$class.html";
+my $html_file = "./$disc-$ano-t$class.html";
 open(HTML_FILE,">",$html_file) or die "Can't open $html_file for writing: $!\n";
 
 select HTML_FILE;
@@ -321,14 +325,14 @@ sub hdr_print {
   td.rec{color: darkgoldenrod}
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-    print "<title>MAT2457 - Notas da Turma $_[0]</title>";
+    print "<title>uc($disc) - Notas da Turma $_[0]</title>";
     print '<link rel="stylesheet" href="style.css" type="text/css"
 media="screen"/>
 </head>
 <body>
 
   <table class="center" frame="box" border="1" cellpadding="1"
-    cellspacing="1" summary="Notas de Prova - MAT-2457.">
+    cellspacing="1" summary="Notas de Prova - uc($disc).">
     <tr class="header">
       <th>Aluno</th>
       <th>Prova 1</th>

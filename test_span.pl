@@ -4,22 +4,21 @@ use strict;
 use warnings;
 
 # Check correct call of program
-if ( $#ARGV != 3) {
-    print "Usage: $0 <ano> <qual prova> <tipos de provas> <arquivo de prova original>\n";
+if ( $#ARGV != 4) {
+    print "Usage: $0 <sigla> <ano> <qual prova> <tipos de provas> <arquivo de prova original>\n";
     exit 0;
 }
 
+# Course
+my $disc = $ARGV[0];
 # Year
-my $ano = $ARGV[0];
-
+my $ano = $ARGV[1];
 # Which test is this?
-my $prova = $ARGV[1];
-
+my $prova = $ARGV[2];
 # Number of permutations of original test.
-my $magic_number = $ARGV[2];
-
+my $magic_number = $ARGV[3];
 # Original test LaTeX File, referres as MasterFile now on.
-my $input = "./$ARGV[3]";
+my $input = "./$ARGV[4]";
 
 # Tells how many questions in this test.
 open(INPUT,"<", $input) or die "Can't open $input for reading: $!\n";
@@ -52,7 +51,7 @@ my $i = 0;
 # Where we actually write the permutations
 while ( $i < $magic_number ) {
     my @quest_copy = @questions;
-    my $output = "./mat2457-$ano-$prova-0$i.tex";
+    my $output = "./$disc-$ano-$prova-0$i.tex";
     open(OUTPUT,">",$output) or die "Can't open $output for writing: $!\n";
     print "Gerando prova $i... ";
 
