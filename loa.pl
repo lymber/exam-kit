@@ -71,11 +71,10 @@ sub hdr_print {
     <style type="text/css">
       table.center{margin-left: auto; margin-right: auto;}
     </style>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';    
-    print "<title>uc($disc) - Gabarito Prova $_[0]</title>";
-    print '<link rel="stylesheet" href="style.css" type="text/css"
-	  media="screen"/>
-  </head>';
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'."\n";    
+    print "    <title>".uc($disc)." - Gabarito Prova ".uc($_[0])."</title>\n";
+    print '    <link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+  </head>'."\n";
 }
 
 sub body_print {

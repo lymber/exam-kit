@@ -315,24 +315,23 @@ sub hdr_print {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<style type="text/css">
-  table.center{margin-left: auto; margin-right: auto;}
-  tr.header{background-color: #909090;}
-  tr.branco{background-color: white;}
-  tr.escuro{background-color: #bcbcbc;}
-  td.passou{color: seagreen}
-  td.bombou{color: darkred}
-  td.rec{color: darkgoldenrod}
-</style>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-    print "<title>uc($disc) - Notas da Turma $_[0]</title>";
-    print '<link rel="stylesheet" href="style.css" type="text/css"
-media="screen"/>
+  <style type="text/css">
+    table.center{margin-left: auto; margin-right: auto;}
+    tr.header{background-color: #909090;}
+    tr.branco{background-color: white;}
+    tr.escuro{background-color: #bcbcbc;}
+    td.passou{color: seagreen}
+    td.bombou{color: darkred}
+    td.rec{color: darkgoldenrod}
+  </style>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'."\n";
+    print "  <title>".uc($disc)." - Notas da Turma $_[0]</title>\n";
+    print '  <link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
 </head>
 <body>
 
   <table class="center" frame="box" border="1" cellpadding="1"
-    cellspacing="1" summary="Notas de Prova - uc($disc).">
+    cellspacing="1" summary="Notas de Prova - '.uc($disc).'.>
     <tr class="header">
       <th>Aluno</th>
       <th>Prova 1</th>
