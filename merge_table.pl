@@ -16,10 +16,10 @@ if ( $#ARGV == 3 ){
     my $matriculados = "../dados/$disc-$ano-matriculados-t$class.csv";
     open(MATRICULADOS,"<", $matriculados) or die "Can't open $matriculados for reading: $!\n";
     # Tests grades already annouced
-    my $curr_tests = "./$disc-$ano-t$class-$ARGV[2].dat";
+    my $curr_tests = "./$disc-$ano-t$class-$ARGV[3].dat";
     open(CURRTESTS,"<", $curr_tests) or die "Can't open $curr_tests for reading: $!\n";
     # Output
-    my $output = "./$disc-$ano-t$class-pronto-$ARGV[2].dat";
+    my $output = "./$disc-$ano-t$class-pronto-$ARGV[3].dat";
     open(OUTPUT,">", $output) or die "Can't open $output for writing: $!\n";
 
     my %hash_notas = ();
@@ -102,7 +102,7 @@ if ( $#ARGV == 3 ){
 	elsif ($_ eq "average"){print "      <td><strong>Média</strong></td>\n";}
 	else{print "      <td><strong>Desvio Padrão<strong></td>\n";}
 	foreach (@{$table{$_}}){print "      <td>$_</td>\n";}
-	for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
+	for (my $j=$#{$table{$_}}; $j<6; $j++){print "      <td></td>\n";}
 	print "    </tr>\n";
     }
 
@@ -248,11 +248,14 @@ foreach (sort keys %table) {
 	$j++;
     }
 
+    # assume student haven't made Psub and Prec
     my $fez_sub = 0;
-    if ($provas[3] ne "-") {$fez_sub = 1}
-
     my $fez_rec = 0;
-    if ($provas[4] ne "-") {$fez_rec = 1}
+    # if he made one of them then we are aware of it.
+    if ($#provas > 2) {
+	if ($provas[3] ne "-") {$fez_sub = 1}
+	if ($provas[4] ne "-") {$fez_rec = 1}
+    }
 
     foreach (@provas){
 	if ($_ eq "-") {$_=0;}
@@ -260,26 +263,36 @@ foreach (sort keys %table) {
 
     my $com_sub;
     if ($fez_sub) {
-	my @medias = (sprintf("%.1f",(2*$provas[3]+3*$provas[1]+3*$provas[2])/8+1/1024), sprintf("%.1f",(2*$provas[0]+3*$provas[3]+3*$provas[2])/8+1/1024), sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[3])/8+1/1024));
+	# when grades were decimal
+	# my @medias = (sprintf("%.1f",(2*$provas[3]+3*$provas[1]+3*$provas[2])/8+1/1024), sprintf("%.1f",(2*$provas[0]+3*$provas[3]+3*$provas[2])/8+1/1024), sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[3])/8+1/1024));
+	# now we compute grades as integers
+	my @medias = (2*$provas[3]+3*$provas[1]+3*$provas[2], 2*$provas[0]+3*$provas[3]+3*$provas[2], 2*$provas[0]+3*$provas[1]+3*$provas[3]);
 	$com_sub = max(@medias);
     }
-    else {$com_sub = sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[2])/8+1/1024);
-    };
+    else {
+	# now we compute grades as integers
+	$com_sub = 2*$provas[0]+3*$provas[1]+3*$provas[2];
+    }
  
     my $final;
     if ($fez_rec) {
-	$final = sprintf("%.1f",(2*$com_sub+3*$provas[4])/5+1/1024)
+	# now we compute grades as integers
+	$final = 2*$com_sub+3*$provas[4]
     }
-    else {$final = $com_sub;};
+    else {
+	# now we compute grades as integers
+	$final = $com_sub;
+    }
 
     for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
 
-    if ($com_sub >= 5) {print "      <td class=\"passou\">$com_sub</td>\n";}
-    elsif ($com_sub < 3) {print "      <td class=\"bombou\">$com_sub</td>\n";}
+    if ($com_sub >= 63) {print "      <td class=\"passou\">$com_sub</td>\n";}
+    elsif ($com_sub < 38) {print "      <td class=\"bombou\">$com_sub</td>\n";}
     else {print "      <td class=\"rec\">$com_sub</td>\n";}
 
-    if ($final >= 5) {print "      <td class=\"passou\">$final</td>\n";}
+    if (($final >= 106) || ($com_sub >= 63)) {print "      <td class=\"passou\">$final</td>\n";}
     else {print "      <td class=\"bombou\">$final</td>\n";}
+
     print "    </tr>\n";
 }
 
@@ -311,6 +324,7 @@ sub round {
 
 sub hdr_print {
     my $i;
+
     print '<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -325,13 +339,13 @@ sub hdr_print {
     td.rec{color: darkgoldenrod}
   </style>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'."\n";
-    print "  <title>".uc($disc)." - Notas da Turma $_[0]</title>\n";
+    print "  <title>MAT2458 - Notas da Turma $_[0]</title>\n";
     print '  <link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
 </head>
 <body>
 
   <table class="center" frame="box" border="1" cellpadding="1"
-    cellspacing="1" summary="Notas de Prova - '.uc($disc).'.>
+    cellspacing="1" summary="Notas de Prova - MAT2458.>
     <tr class="header">
       <th>Aluno</th>
       <th>Prova 1</th>
