@@ -62,7 +62,10 @@ while ( $_ = <INPUT> ) {
 		}
 	    }
 	    close(ANSWERS);
-	    my $nota = round($acertos*10/16);
+	    # when grades were decimal
+	    # my $nota = round($acertos*10/16);
+	    # now we count correct answers
+	    my $nota = $acertos;
 	    $notas_novas{$nusp}=$nota;
  	}
     }
