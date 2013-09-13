@@ -101,8 +101,15 @@ if ( $#ARGV == 3 ){
 	if ($_ =~ /[0-9]{7}/){print "      <td>$_</td>\n";}
 	elsif ($_ eq "average"){print "      <td><strong>Média</strong></td>\n";}
 	else{print "      <td><strong>Desvio Padrão<strong></td>\n";}
-	foreach (@{$table{$_}}){print "      <td>$_</td>\n";}
-	for (my $j=$#{$table{$_}}; $j<6; $j++){print "      <td></td>\n";}
+
+#	foreach (@{$table{$_}}){print "      <td>$_</td>\n";}
+	my $p1peso = ${$table{$_}}[0];
+	print "      <td class=\"bombou\">$p1peso</td>\n";
+	for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
+	if ($p1peso eq "-") {$p1peso = 0}
+	else {$p1peso = 2*$p1peso;}
+	print "      <td class=\"bombou\">$p1peso</td>\n";
+	print "      <td class=\"bombou\">$p1peso</td>\n";
 	print "    </tr>\n";
     }
 
