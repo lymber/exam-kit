@@ -104,7 +104,7 @@ if ( $#ARGV == 3 ){
 
 #	foreach (@{$table{$_}}){print "      <td>$_</td>\n";}
 	my $p1peso = ${$table{$_}}[0];
-	print "      <td class=\"bombou\">$p1peso</td>\n";
+	print "      <td>$p1peso</td>\n";
 	for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
 	if ($p1peso eq "-") {$p1peso = 0}
 	else {$p1peso = 2*$p1peso;}
