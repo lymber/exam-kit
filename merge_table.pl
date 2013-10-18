@@ -140,7 +140,7 @@ my $matriculados = "../dados/$disc-$ano-matriculados-t$class.csv";
 open(MATRICULADOS,"<", $matriculados) or die "Can't open $matriculados for reading: $!\n";
 
 # Tests grades already annouced
-my $curr_tests = "./$disc-$ano-t$class-pronto-$ARGV[3].dat";
+my $curr_tests = "../dados/$disc-$ano-t$class-pronto-$ARGV[3].dat";
 open(CURRTESTS,"<", $curr_tests) or die "Can't open $curr_tests for reading: $!\n";
 # Test grades to be merged
 my $new_test = "./$disc-$ano-t$class-$ARGV[4].dat";
