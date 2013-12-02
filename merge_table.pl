@@ -352,7 +352,7 @@ sub hdr_print {
 <body>
 
   <table class="center" frame="box" border="1" cellpadding="1"
-    cellspacing="1" summary="Notas de Prova - MAT2458.>
+    cellspacing="1" summary="Notas de Prova - MAT2458.">
     <tr class="header">
       <th>Aluno</th>
       <th>Prova 1</th>
