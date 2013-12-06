@@ -32,12 +32,15 @@ my %notas_novas = ();
 while ( $_ = <INPUT> ) {
     #student id
     my $nusp = substr($_,40,7);
-    if ( $nusp !~ /[0-9]{7}/) {print color("red"), "  Atenção: $nusp inválido na linha $..\n", color("reset");}
+    if ( $nusp !~ /[0-9]{7}/) {print color("red"), "  Atenção: NUSP $nusp inválido na linha $..\n", color("reset");}
     #student answers
     my @answers = split('',lc(substr($_,47,16)));
     #student class
     my $turma = substr($_,77,2);
     if ( $turma !~ /0[1-9]{1}|1[0-3]{1}|20/) {print color("yellow"), "  Aluno $nusp, turma $turma, na linha $.: não preencheu turma corretamente.\n", color("reset");}
+    else {
+	if ( $turma ne $class) {print color("red"), "  Aluno $nusp, turma $turma, na linha $.: turma preenchida não é deste pacote.\n", color("reset");}
+    }
     #student test type
     my $test='';
     if ( substr($_,79,2) !~ /0[0-9]{1}|[1-9]{1}[0-9]{1}/ ){print color("red"), "  Aluno $nusp, turma $turma, na linha $.: tipo de prova inválido.\n", color("reset");}
