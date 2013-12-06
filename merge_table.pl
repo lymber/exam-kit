@@ -259,10 +259,8 @@ foreach (sort keys %table) {
     my $fez_sub = 0;
     my $fez_rec = 0;
     # if he made one of them then we are aware of it.
-    if ($#provas > 2) {
-	if ($provas[3] ne "-") {$fez_sub = 1}
-	if ($provas[4] ne "-") {$fez_rec = 1}
-    }
+    if ($#provas > 2) {if ($provas[3] ne "-") {$fez_sub = 1}}
+    elsif ($#provas > 3) {if ($provas[4] ne "-") {$fez_rec = 1}}
 
     foreach (@provas){
 	if ($_ eq "-") {$_=0;}
