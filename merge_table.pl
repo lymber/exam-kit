@@ -143,7 +143,7 @@ open(MATRICULADOS,"<", $matriculados) or die "Can't open $matriculados for readi
 my $curr_tests = "../dados/$disc-$ano-t$class-pronto-$ARGV[3].dat";
 open(CURRTESTS,"<", $curr_tests) or die "Can't open $curr_tests for reading: $!\n";
 # Test grades to be merged
-my $new_test = "./$disc-$ano-t$class-$ARGV[4].dat";
+my $new_test = "../dados/$disc-$ano-t$class-$ARGV[4].dat";
 open(NEWTEST,"<", $new_test) or die "Can't open $new_test for reading: $!\n";
 
 my %hash_notas = ();
@@ -260,7 +260,7 @@ foreach (sort keys %table) {
     my $fez_rec = 0;
     # if he made one of them then we are aware of it.
     if ($#provas > 2) {if ($provas[3] ne "-") {$fez_sub = 1}}
-    elsif ($#provas > 3) {if ($provas[4] ne "-") {$fez_rec = 1}}
+    if ($#provas > 3) {if ($provas[4] ne "-") {$fez_rec = 1}}
 
     foreach (@provas){
 	if ($_ eq "-") {$_=0;}
@@ -270,32 +270,32 @@ foreach (sort keys %table) {
     if ($fez_sub) {
 	# when grades were decimal
 	# my @medias = (sprintf("%.1f",(2*$provas[3]+3*$provas[1]+3*$provas[2])/8+1/1024), sprintf("%.1f",(2*$provas[0]+3*$provas[3]+3*$provas[2])/8+1/1024), sprintf("%.1f",(2*$provas[0]+3*$provas[1]+3*$provas[3])/8+1/1024));
-	# now we compute grades as integers
-	my @medias = (2*$provas[3]+3*$provas[1]+3*$provas[2], 2*$provas[0]+3*$provas[3]+3*$provas[2], 2*$provas[0]+3*$provas[1]+3*$provas[3]);
+	# now we compute grades as integers in 0 - 640 scale
+	my @medias = (10*$provas[3]+15*$provas[1]+15*$provas[2], 10*$provas[0]+15*$provas[3]+15*$provas[2], 10*$provas[0]+15*$provas[1]+15*$provas[3]);
 	$com_sub = max(@medias);
     }
     else {
-	# now we compute grades as integers
-	$com_sub = 2*$provas[0]+3*$provas[1]+3*$provas[2];
+	# now we compute grades as integers in 0 - 640 scale
+	$com_sub = 5*(2*$provas[0]+3*$provas[1]+3*$provas[2]);
     }
  
     my $final;
     if ($fez_rec) {
-	# now we compute grades as integers
-	$final = 2*$com_sub+3*$provas[4]
+	# now we compute grades as integers in 0 - 640 scale
+	$final = (2*$com_sub+120*$provas[4])/5
     }
     else {
-	# now we compute grades as integers
+	# now we compute grades as integers in 0 - 640 scale
 	$final = $com_sub;
     }
 
     for (my $j=$#{$table{$_}}; $j<4; $j++){print "      <td></td>\n";}
 
-    if ($com_sub >= 63) {print "      <td class=\"passou\">$com_sub</td>\n";}
-    elsif ($com_sub < 38) {print "      <td class=\"bombou\">$com_sub</td>\n";}
+    if ($com_sub >= 315) {print "      <td class=\"passou\">$com_sub</td>\n";}
+    elsif ($com_sub < 190) {print "      <td class=\"bombou\">$com_sub</td>\n";}
     else {print "      <td class=\"rec\">$com_sub</td>\n";}
 
-    if (($final >= 106) || ($com_sub >= 63)) {print "      <td class=\"passou\">$final</td>\n";}
+    if ($final >= 315)  {print "      <td class=\"passou\">$final</td>\n";}
     else {print "      <td class=\"bombou\">$final</td>\n";}
 
     print "    </tr>\n";
@@ -353,13 +353,13 @@ sub hdr_print {
     cellspacing="1" summary="Notas de Prova - MAT2458.">
     <tr class="header">
       <th>Aluno</th>
-      <th>Prova 1</th>
-      <th>Prova 2</th>
-      <th>Prova 3</th>
+      <th>Prova 1 <br />(Peso 10)</th>
+      <th>Prova 2 <br />(Peso 15)</th>
+      <th>Prova 3 <br />(Peso 15)</th>
       <th>Prova Sub</th>
       <th>Prova Rec</th>
-      <th>Média s/ Rec.</th>
-      <th>Média Final</th>
+      <th>Média s/ Rec. <br />(entre 0 e 640)</th>
+      <th>Média Final <br />(entre 0 e 640)</th>
     </tr>
 ';
 }
