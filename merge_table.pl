@@ -295,7 +295,7 @@ foreach (sort keys %table) {
     elsif ($com_sub < 190) {print "      <td class=\"bombou\">$com_sub</td>\n";}
     else {print "      <td class=\"rec\">$com_sub</td>\n";}
 
-    if ($final >= 315)  {print "      <td class=\"passou\">$final</td>\n";}
+    if ($final > 310)  {print "      <td class=\"passou\">$final</td>\n";}
     else {print "      <td class=\"bombou\">$final</td>\n";}
 
     print "    </tr>\n";
